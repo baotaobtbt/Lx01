@@ -1,0 +1,65 @@
+DROP DATABASE
+IF EXISTS Works;
+
+CREATE DATABASE Works DEFAULT CHARSET = GBK;
+
+USE Works;
+
+CREATE TABLE UserInfo (
+	UserName nvarchar (50) PRIMARY KEY,
+	PASSWORD nvarchar (50) NOT NULL,
+	QQ nvarchar (12),
+	Email nvarchar (50),
+	Type nchar (10) NOT NULL,
+	UserImg nvarchar (250)
+);
+
+CREATE TABLE Activity (
+	ActivityID INT PRIMARY KEY auto_increment,
+	ActivityName nvarchar (125) NOT NULL,
+	EndTime datetime NOT NULL,
+	ActivityPicture nvarchar (250) NOT NULL,
+	ActivityIntroduction nvarchar (8000),
+	Summary nvarchar (250),
+	ActivityVerify nchar (10) NOT NULL DEFAULT '待审核',
+	ActivityStatus nchar (10),
+	UserName nvarchar (50) NOT NULL
+);
+
+CREATE TABLE WorkInfo (
+	WorkID INT PRIMARY KEY auto_increment,
+	WorkName nvarchar (50) NOT NULL,
+	WorkPicture nvarchar (250) NOT NULL,
+	UploadTime datetime NOT NULL,
+	WorkIntroduction nvarchar (8000),
+	WorkVerify nchar (10) NOT NULL DEFAULT '待审核',
+	UserName nvarchar (50) NOT NULL,
+	ActivityName nvarchar (125),
+	Recommend nchar (2) NOT NULL DEFAULT '否',
+	RecommendTime datetime
+);
+
+CREATE TABLE COMMENT (
+	CommentID INT PRIMARY KEY auto_increment,
+	WorkID INT NOT NULL,
+	WorkName nvarchar (50) NOT NULL,
+	UserName nvarchar (50) NOT NULL,
+	CommentContent nvarchar (8000) NOT NULL,
+	CommentTime datetime NOT NULL
+);
+
+CREATE TABLE Image (
+	ImgID INT PRIMARY KEY auto_increment,
+	ImgUrl nvarchar (50) NOT NULL,
+	ImgText nvarchar (50) NOT NULL,
+	ImgLink nvarchar (100) NOT NULL,
+	ImgAlt nvarchar (50) NOT NULL
+);
+
+ALTER TABLE WorkInfo ADD FOREIGN KEY (UserName) REFERENCES UserInfo (UserName);
+
+ALTER TABLE COMMENT ADD FOREIGN KEY (WorkID) REFERENCES WorkInfo (WorkID);
+
+ALTER TABLE COMMENT ADD FOREIGN KEY (UserName) REFERENCES UserInfo (UserName);
+
+ALTER TABLE Activity ADD FOREIGN KEY (UserName) REFERENCES UserInfo (UserName);
